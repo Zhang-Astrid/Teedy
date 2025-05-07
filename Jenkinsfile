@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Jenkins中配置的Docker Hub凭证ID
-        DOCKER_HUB_CREDENTIALS = credentials('1')
+//         DOCKER_HUB_CREDENTIALS = credentials('1')
         // Docker Hub镜像名（用户名/仓库名）
         DOCKER_IMAGE = 'ssssstrid/teedy-app'
         // 自动使用构建编号作为tag
@@ -32,13 +32,14 @@ pipeline {
         stage('Upload Image') {
             steps {
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'DOCKER_HUB_CREDENTIALS') {
+                    docker.withRegistry('https://registry.hub.docker.com', '1') {
                         docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push()
                         docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").push('latest')
                     }
                 }
             }
         }
+
 
         stage('Run Docker Container') {
             steps {
