@@ -47,7 +47,7 @@ pipeline {
                     sh 'docker stop teedy-container-8080 || true'
                     sh 'docker rm teedy-container-8080 || true'
                     docker.image("${env.DOCKER_IMAGE}:${env.DOCKER_TAG}").run(
-                        '--name teedy-container-8080 -d -p 8080:8080'
+                        '--name teedy-container-8080 -d -p 1234:8080'
                     )
                     sh 'docker ps --filter "name=teedy-container"'
                 }
