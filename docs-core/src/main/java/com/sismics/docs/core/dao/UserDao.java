@@ -3,6 +3,7 @@ package com.sismics.docs.core.dao;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import at.favre.lib.crypto.bcrypt.BCrypt;
+import com.sismics.docs.core.util.PasswordUtil;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -287,24 +288,28 @@ public class UserDao {
      * @param password Clear password
      * @return Hashed password
      */
+//    private String hashPassword(String password) {
+//        int bcryptWork = Constants.DEFAULT_BCRYPT_WORK;
+//        String envBcryptWork = System.getenv(Constants.BCRYPT_WORK_ENV);
+//        if (!Strings.isNullOrEmpty(envBcryptWork)) {
+//            try {
+//                int envBcryptWorkInt = Integer.parseInt(envBcryptWork);
+//                if (envBcryptWorkInt >= 4 && envBcryptWorkInt <= 31) {
+//                    bcryptWork = envBcryptWorkInt;
+//                } else {
+//                    log.warn(Constants.BCRYPT_WORK_ENV + " needs to be in range 4...31. Falling back to " + Constants.DEFAULT_BCRYPT_WORK + ".");
+//                }
+//            } catch (NumberFormatException e) {
+//                log.warn(Constants.BCRYPT_WORK_ENV + " needs to be a number in range 4...31. Falling back to " + Constants.DEFAULT_BCRYPT_WORK + ".");
+//            }
+//        }
+//        return BCrypt.withDefaults().hashToString(bcryptWork, password.toCharArray());
+//    }
     private String hashPassword(String password) {
-        int bcryptWork = Constants.DEFAULT_BCRYPT_WORK;
-        String envBcryptWork = System.getenv(Constants.BCRYPT_WORK_ENV);
-        if (!Strings.isNullOrEmpty(envBcryptWork)) {
-            try {
-                int envBcryptWorkInt = Integer.parseInt(envBcryptWork);
-                if (envBcryptWorkInt >= 4 && envBcryptWorkInt <= 31) {
-                    bcryptWork = envBcryptWorkInt;
-                } else {
-                    log.warn(Constants.BCRYPT_WORK_ENV + " needs to be in range 4...31. Falling back to " + Constants.DEFAULT_BCRYPT_WORK + ".");
-                }
-            } catch (NumberFormatException e) {
-                log.warn(Constants.BCRYPT_WORK_ENV + " needs to be a number in range 4...31. Falling back to " + Constants.DEFAULT_BCRYPT_WORK + ".");
-            }
-        }
-        return BCrypt.withDefaults().hashToString(bcryptWork, password.toCharArray());
+        return PasswordUtil.hashPassword(password);
     }
-    
+
+
     /**
      * Returns the list of all users.
      * 

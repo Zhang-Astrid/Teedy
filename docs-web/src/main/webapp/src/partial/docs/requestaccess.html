@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="col-md-4 col-md-offset-4">
+        <div class="well">
+            <form ng-if="!success">
+                <h1>{{ 'request.title' | translate }}</h1>
+                <div class="form-group" ng-class="{ 'has-error': !request.username && hasError }">
+                    <label class="control-label" for="inputUsername">{{ 'request.username' | translate }}</label>
+                    <input type="text" id="inputUsername" ng-model="request.username" class="form-control"
+                           ng-disabled="sending" />
+                </div>
+                <div class="form-group" ng-class="{ 'has-error': !request.email && hasError }">
+                    <label class="control-label" for="inputEmail">{{ 'request.email' | translate }}</label>
+                    <input type="email" id="inputEmail" ng-model="request.email" class="form-control"
+                           ng-disabled="sending" />
+                </div>
+                <div class="form-group" ng-class="{ 'has-error': !request.password && hasError }">
+                    <label class="control-label" for="inputPassword">{{ 'request.password' | translate }}</label>
+                    <input type="password" id="inputPassword" ng-model="request.password" class="form-control"
+                           ng-disabled="sending" />
+                </div>
+                <div class="form-group" ng-class="{ 'has-error': !request.passwordConfirm && hasError }">
+                    <label class="control-label" for="inputPasswordConfirm">{{ 'request.password_confirm' | translate }}</label>
+                    <input type="password" id="inputPasswordConfirm" ng-model="request.passwordConfirm" class="form-control"
+                           ng-disabled="sending" />
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary btn-block" ng-click="submitRequest()" ng-disabled="sending">
+                        <span class="fas fa-user-plus"></span> {{ 'request.submit' | translate }}
+                    </button>
+                </div>
+                <div class="form-group">
+                    <a href="#/login">{{ 'request.back' | translate }}</a>
+                </div>
+
+                <div class="alert alert-danger" ng-show="error">
+                    {{ error }}
+                </div>
+            </form>
+
+            <div ng-if="success">
+                <h1>{{ 'request.success_title' | translate }}</h1>
+                <div class="alert alert-success">
+                    {{ successMessage || 'request.success' | translate }}
+                </div>
+                <p>{{ 'request.success_subtitle' | translate }}</p>
+                <p><a href="#/login" class="btn btn-primary">{{ 'login.submit' | translate }}</a></p>
+            </div>
+        </div>
+    </div>
+</div>

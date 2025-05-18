@@ -1,0 +1,47 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1>{{ 'settings.registration.title' | translate }}</h1>
+        </div>
+
+        <!-- Registration requests -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{ 'settings.registration.requests' | translate }}</h3>
+            </div>
+            <div class="panel-body">
+                <div ng-if="requests.length === 0">
+                    {{ 'settings.registration.no_requests' | translate }}
+                </div>
+
+                <table class="table table-striped" ng-if="requests.length > 0">
+                    <thead>
+                    <tr>
+                        <th>{{ 'settings.registration.username' | translate }}</th>
+                        <th>{{ 'settings.registration.email' | translate }}</th>
+                        <th>{{ 'settings.registration.date' | translate }}</th>
+                        <th>{{ 'settings.registration.actions' | translate }}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="request in requests">
+                        <td>{{ request.username }}</td>
+                        <td>{{ request.email }}</td>
+                        <td>{{ request.create_date | date:'medium' }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn btn-success" ng-click="approve(request)" title="{{ 'settings.registration.approve' | translate }}">
+                                    <span class="fas fa-check"></span>
+                                </button>
+                                <button class="btn btn-danger" ng-click="reject(request)" title="{{ 'settings.registration.reject' | translate }}">
+                                    <span class="fas fa-times"></span>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

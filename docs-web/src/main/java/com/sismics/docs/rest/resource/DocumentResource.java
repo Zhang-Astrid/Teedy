@@ -55,7 +55,6 @@ import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HEAD;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PUT;
@@ -78,7 +77,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -87,7 +85,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * Document REST resources.
@@ -450,7 +447,7 @@ public class DocumentResource extends BaseResource {
             @QueryParam("search[searchworkflow]") String searchWorkflow
     ) {
         if (!authenticate()) {
-            throw new ForbiddenClientException();
+            throw new ForbiddenClientException("您的注册申请已被拒绝，请联系管理员");
         }
 
         JsonObjectBuilder response = Json.createObjectBuilder();
@@ -675,7 +672,7 @@ public class DocumentResource extends BaseResource {
             @FormParam("language") String language,
             @FormParam("create_date") String createDateStr) {
         if (!authenticate()) {
-            throw new ForbiddenClientException();
+            throw new ForbiddenClientException("您的注册申请已被拒绝，请联系管理员");
         }
 
         // Validate input data
@@ -797,7 +794,7 @@ public class DocumentResource extends BaseResource {
             @FormParam("language") String language,
             @FormParam("create_date") String createDateStr) {
         if (!authenticate()) {
-            throw new ForbiddenClientException();
+            throw new ForbiddenClientException("您的注册申请已被拒绝，请联系管理员");
         }
 
         // Validate input data
@@ -820,7 +817,7 @@ public class DocumentResource extends BaseResource {
         // Check write permission
         AclDao aclDao = new AclDao();
         if (!aclDao.checkPermission(id, PermType.WRITE, getTargetIdList(null))) {
-            throw new ForbiddenClientException();
+            throw new ForbiddenClientException("您的注册申请已被拒绝，请联系管理员");
         }
 
         // Get the document
@@ -898,7 +895,7 @@ public class DocumentResource extends BaseResource {
     @Consumes("multipart/form-data")
     public Response importEml(@FormDataParam("file") FormDataBodyPart fileBodyPart) {
         if (!authenticate()) {
-            throw new ForbiddenClientException();
+            throw new ForbiddenClientException("您的注册申请已被拒绝，请联系管理员");
         }
 
         // Validate input data
@@ -992,7 +989,7 @@ public class DocumentResource extends BaseResource {
     public Response delete(
             @PathParam("id") String id) {
         if (!authenticate()) {
-            throw new ForbiddenClientException();
+            throw new ForbiddenClientException("您的注册申请已被拒绝，请联系管理员");
         }
 
         // Get the document

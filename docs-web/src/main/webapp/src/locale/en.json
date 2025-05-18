@@ -14,7 +14,8 @@
     "password_lost_sent_title": "Password reset email sent",
     "password_lost_sent_message": "An email has been sent to <strong>{{ username }}</strong> to reset your password",
     "password_lost_error_title": "Password reset error",
-    "password_lost_error_message": "Unable to send a password reset email, please contact your administrator for a manual reset"
+    "password_lost_error_message": "Unable to send a password reset email, please contact your administrator for a manual reset",
+    "register": "register"
   },
   "passwordlost": {
     "title": "Password lost",
@@ -265,6 +266,17 @@
       "message": "Here you can view informations about users and groups."
     }
   },
+  "request": {
+    "title": "Request access",
+    "username": "Username",
+    "password": "Password",
+    "password_confirm": "Confirm password",
+    "email": "Email",
+    "submit": "Submit request",
+    "back": "Back to login",
+    "success": "Your request has been submitted and is pending admin approval",
+    "password_mismatch": "Passwords do not match"
+  },
   "settings": {
     "menu_personal_settings": "Personal settings",
     "menu_user_account": "User account",
@@ -501,6 +513,20 @@
       "line_3": "Your files will be imported in documents according to the file importer configuration.",
       "download": "Download",
       "instructions": "Instructions"
+    },
+    "menu": {
+      "registration": "Registration requests"
+    },
+    "registration": {
+      "title": "Registration requests management",
+      "requests": "Pending requests",
+      "no_requests": "No pending registration requests",
+      "username": "Username",
+      "email": "Email",
+      "date": "Date",
+      "actions": "Actions",
+      "approve": "Approve",
+      "reject": "Reject"
     }
   },
   "feedback": {

@@ -24,6 +24,13 @@
         <a class="list-group-item" ui-sref-active="{ active: 'settings.monitoring.**' }" href="#/settings/monitoring">{{ 'settings.menu_monitoring' | translate }}</a>
       </ul>
     </div>
+    <div class="list-group">
+      <!-- 现有菜单项 -->
+      <a href="#/settings/registration" class="list-group-item" ng-class="{ active: $state.current.name == 'settings.registration' }" ng-show="isAdmin()">
+        <span class="fas fa-user-plus"></span> {{ 'settings.menu.registration' | translate }}
+      </a>
+    </div>
+
   </div>
 
   <div class="col-md-9 settings-content">

@@ -356,7 +356,7 @@ angular.module('docs',
       }
     })
     .state('login', {
-      url: '/login?redirectState&redirectParams',
+      url: '/login',
       views: {
         'page': {
           templateUrl: 'partial/docs/login.html',
@@ -417,7 +417,27 @@ angular.module('docs',
           controller: 'GroupProfile'
         }
       }
-    });
+    })
+      // 注册请求路由
+      .state('requestaccess', {
+        url: '/requestaccess',
+        views: {
+          'page': {
+            templateUrl: 'partial/docs/requestaccess.html',
+            controller: 'RequestAccess'
+          }
+        }
+      })
+      // 注册请求管理路由
+      .state('settings.registration', {
+        url: '/registration',
+        views: {
+          'settings': {
+            templateUrl: 'partial/docs/settings.registration.html',
+            controller: 'SettingsRegistration'
+          }
+        }
+      });
 
   // Configuring Restangular
   RestangularProvider.setBaseUrl('../api');
@@ -573,6 +593,154 @@ angular.module('docs',
  */
 .run (function ($rootScope) {
   $rootScope.onboardingEnabled = false;
+})
+
+/**
+ * Request access controller.
+ */
+.controller('RequestAccess', function($scope, $http, $state,$timeout,Restangular) {
+  $scope.request = {
+    username: '',
+    password: '',
+    passwordConfirm: '',
+    email: ''
+  };
+
+  $scope.sending = false;
+  $scope.success = false;
+  $scope.error = null;
+  $scope.hasError = false;
+
+
+  /**
+   * Send registration request.
+   */
+  $scope.submitRequest = function() {
+    $scope.hasError = false;
+    $scope.sending = true;
+    $scope.error = null;
+
+    if (!$scope.request.username || !$scope.request.password
+        || !$scope.request.passwordConfirm  || !$scope.request.email) {
+      $scope.hasError = true;
+      $scope.sending = false;
+      return;
+    }
+
+    if ($scope.request.password != $scope.request.passwordConfirm) {
+      $scope.error = '密码不匹配';
+      $scope.sending = false;
+      return;
+    }
+
+    // 验证邮箱格式
+    var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test($scope.request.email)) {
+      $scope.error = '请输入有效的邮箱地址';
+      $scope.sending = false;
+      return;
+    }
+
+    // 使用jQuery的$.ajax来发送请求
+    $.ajax({
+      type: 'PUT',
+      url: '../api/user/registration',
+      data: {
+        username: $scope.request.username,
+        password: $scope.request.password,
+        email: $scope.request.email
+      },
+      success: function(data) {
+        $scope.$apply(function() {
+          $scope.success = true;
+          $scope.successMessage = "注册申请已提交，请等待管理员审核后方可登录";
+          $scope.sending = false;
+
+          // 延迟5秒后跳转到登录页
+          setTimeout(function() {
+            window.location.href = '#/login';
+          }, 5000);
+        });
+      },
+      error: function(jqXHR) {
+        $scope.$apply(function() {
+          if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+            $scope.error = jqXHR.responseJSON.message;
+          } else {
+            $scope.error = '注册申请提交失败，请稍后重试';
+          }
+          $scope.sending = false;
+        });
+      }
+    });
+  };
+});
+
+'use strict';
+/**
+ * 注册请求设置控制器.
+ */
+angular.module('docs').controller('SettingsRegistration', function($scope, $http, Restangular, $dialog) {
+  // 加载所有待处理的注册请求
+  $scope.loadRequests = function() {
+    Restangular.one('user/registration').get().then(function(data) {
+      $scope.requests = data.requests;
+    });
+  };
+
+  $scope.loadRequests();
+
+  // 批准注册请求
+  $scope.approve = function(request) {
+    var title = '批准注册请求';
+    var msg = '确定要批准用户 "' + request.username + '" 的注册请求吗？批准后该用户将能够登录系统。';
+    var btns = [{result: 'cancel', label: '取消'}, {result: 'ok', label: '批准', cssClass: 'btn-primary'}];
+
+    $dialog.messageBox(title, msg, btns)
+        .open()
+        .then(function(result) {
+          if (result === 'ok') {
+            $http.post('../api/user/registration/' + request.id, {
+              status: 'APPROVED'
+            }).then(function() {
+              // 移除已处理的请求
+              $scope.loadRequests();
+            }, function(response) {
+              if (response.data && response.data.message) {
+                alert(response.data.message);
+              } else {
+                alert('处理请求时发生错误');
+              }
+            });
+          }
+        });
+  };
+
+  // 拒绝注册请求
+  $scope.reject = function(request) {
+    var title = '拒绝注册请求';
+    var msg = '确定要拒绝用户 "' + request.username + '" 的注册请求吗？拒绝后该用户将无法登录系统。';
+    var btns = [{result: 'cancel', label: '取消'}, {result: 'ok', label: '拒绝', cssClass: 'btn-danger'}];
+
+    $dialog.messageBox(title, msg, btns)
+        .open()
+        .then(function(result) {
+          if (result === 'ok') {
+            $http.post('../api/user/registration/' + request.id, {
+              status: 'REJECTED'
+            }).then(function() {
+              // 移除已处理的请求
+              $scope.loadRequests();
+            }, function(response) {
+              if (response.data && response.data.message) {
+                alert(response.data.message);
+              } else {
+                alert('处理请求时发生错误');
+              }
+            });
+          }
+        });
+  };
 });
 
 if (location.search.indexOf("protractor") > -1) {
